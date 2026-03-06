@@ -1,28 +1,8 @@
 ---
 name: mcp-builder
-description: >
-  Guide for creating high-quality MCP (Model Context Protocol) servers that enable LLMs to interact with external services through well-designed tools.
-tools: [read, write, bash]
-updated: 2026-03-06
+description: Guide for creating high-quality MCP (Model Context Protocol) servers that enable LLMs to interact with external services through well-designed tools. Use when building MCP servers to integrate external APIs or services, whether in Python (FastMCP) or Node/TypeScript (MCP SDK).
+license: Complete terms in LICENSE.txt
 ---
-
-# Mcp Builder
-
-Guide for creating high-quality MCP (Model Context Protocol) servers that enable LLMs to interact with external services through well-designed tools.
-
-## Cuándo usar esta skill
-- Cuando el usuario necesite: guide for creating high-quality mcp (model context protocol) servers that enable llms to interact with external services through well-designed tools.
-- Cuando se mencione este tema o contexto específico.
-
-## Antes de Crear Notas
-
-> [!CAUTION]
-> **OBLIGATORIO**: Lee y aplica [[.agents/REGLAS_GLOBALES]]
-> antes de crear cualquier nota.
-
-**Ubicación por defecto:** `.agents/skills/`
-
-## Instrucciones
 
 # MCP Server Development Guide
 
@@ -254,9 +234,3 @@ Load these resources as needed during development:
   - XML format specifications
   - Example questions and answers
   - Running an evaluation with the provided scripts
-
-## REGLA DE ORO DE EDICIÓN
-Cuando uses `editar_nota`, el `nuevo_contenido` debe ser el **ARCHIVO COMPLETO**.
-- **NUNCA** dupliques el bloque YAML.
-- **REEMPLAZA** la metadata anterior con la nueva.
-- Asegura que solo exista un título `#` principal.
