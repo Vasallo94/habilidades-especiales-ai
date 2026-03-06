@@ -4,9 +4,26 @@
 
 set -e
 
-REPO="vasallo94/skills"
+REPO="Vasallo94/vasallo94-skills"
 BRANCH="main"
-DEST="$HOME/.claude/commands"
+
+# Detectar Sistema Operativo para la ruta correcta
+OS="$(uname -s)"
+case "${OS}" in
+    Linux*|Darwin*)
+        DEST="$HOME/.claude/commands"
+        ;;
+    CYGWIN*|MINGW*|MSYS*)
+        # En Git Bash / CMD de Windows
+        DEST="$HOME/.claude/commands"
+        ;;
+    *)
+        DEST="$HOME/.claude/commands"
+        ;;
+esac
+
+echo "🖥️  Sistema detectado: $OS"
+echo "📂 Directorio destino: $DEST"
 
 if [ $# -eq 0 ]; then
   echo "❌ Error: Debes especificar al menos una skill para instalar."
