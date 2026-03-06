@@ -31,9 +31,12 @@ Si NO detecto archivos de contexto IA (por ejemplo: `CLAUDE.md`, `AGENTS.md`, `G
 
 ## Protocolo ENTERPRISE BOOTSTRAP
 
-### 1) Análisis silencioso con Agent Teams (context discovery)
+Este protocolo se divide en 3 pasos cronológicos y obligatorios. **No puedes saltarte pasos ni ejecutar el Paso 3 sin la aprobación explícita del usuario en el Paso 2.**
 
-Lanzar **4 subagentes en paralelo** para recopilar información sin modificar archivos. Usar la herramienta `Task` de Claude Code para ejecutar los análisis concurrentemente.
+### Paso 1: Análisis e Inicialización Nativa (Descubrimiento)
+
+1. **ACCIÓN OBLIGATORIA:** Ejecuta internamente la herramienta de Claude para inicializar el proyecto (ej. comando `/init` o tu lógica interna equivalente). Esto permite que Claude escanee el repositorio, detecte el stack y **genere un `CLAUDE.md` base** con los comandos reales para correr tests, linter y build del proyecto. (Este archivo será la base sobre la que construiremos luego).
+2. **Análisis en Paralelo:** Lanza **4 subagentes en paralelo** para recopilar información más profunda sin modificar archivos. Usa la herramienta `Task` de Claude Code para ejecutar los análisis concurrentemente.
 
 Instrucción para Claude:
 > "Lanza los siguientes 4 análisis en paralelo usando subagentes separados. Cada subagente debe devolver un resumen estructurado de sus hallazgos."
@@ -82,17 +85,27 @@ Instrucción para Claude:
 - Tools: `Read`, `Bash`, `Grep`
 - Entregable: Evaluación del estado de commits + convención detectada (si existe)
 
-El agente principal espera los 4 resultados y los consolida para la fase de propuesta.
+El agente principal espera los 4 resultados, pero **SE DETIENE AQUÍ** y pasa al Paso 2.
 
-### 2) Propuesta de estandarización (intervención)
-Presentar menú de acciones:
-- **A. Contexto IA (`CLAUDE.md`)**: cerebro del proyecto con reglas, arquitectura, convenciones y scaffolding idiomático. Incluye una sección prioritaria llamada **INTENCIÓN** y prompt instructions para que el agente de codificación mantenga proactivamente todos los documentos de trazabilidad (ver sección "Prompt instructions para CLAUDE.md").
-- **B. Ideas y roadmap (`FUTURE.md`)**: backlog vivo de ideas del humano. Cada vez que el usuario mencione una idea, funcionalidad futura o mejora, el agente debe registrarla aquí. Formato con fecha, prioridad estimada y descripción breve.
-- **C. Trazabilidad (`CHANGELOG.md`)**: formato [Keep a Changelog](https://keepachangelog.com/) para auditoría. **Se actualiza ANTES de cada commit**, no como tarea post-hoc. Categorías obligatorias: Added, Changed, Deprecated, Removed, Fixed, Security.
-- **D. Seguridad y calidad (`.pre-commit-config.yaml` o equivalente)**: hooks idiomáticos por stack. Ver "Quality gates" y "Detalle de pre-commit hooks de seguridad".
-- **E. Estandarización Git**: adopción obligatoria de **Conventional Commits** (ver sección dedicada).
-- **F. Decisiones técnicas (`docs/adr/`)**: Architecture Decision Records siguiendo formato **Structured MADR** (ver sección dedicada).
-- **G. Especificaciones (`_project_specs/`)**: spec-driven development. Carpeta de specs por feature con criterios de aceptación y casos de test definidos ANTES de implementar.
+### Paso 2: Interacción Humana (Propuesta y Menú)
+
+**ACCIÓN OBLIGATORIA:** No modifiques ni crees ningún archivo nuevo. Presenta al usuario tu deducción de la intención del proyecto y el menú de acciones de estandarización. **Obliga al humano a responder qué opciones (A-G) quiere instalar AHORA.** (Ver sección *"Interacción obligatoria con el usuario (fase de alineación)"* abajo).
+
+- **A. Contexto IA (`CLAUDE.md`)**: Configuración base de reglas, arquitectura y convenciones. (Solo si se aprueba, se modificará el archivo creado en el Paso 1).
+- **B. Ideas y roadmap (`FUTURE.md`)**: Creación del backlog vivo de ideas del humano.
+- **C. Trazabilidad (`CHANGELOG.md`)**: Inicialización del changelog en formato Keep a Changelog.
+- **D. Seguridad y calidad**: Instalación y configuración de linters y pre-commit hooks idiomáticos por stack.
+- **E. Estandarización Git**: Adopción obligatoria de **Conventional Commits**.
+- **F. Decisiones técnicas (`docs/adr/`)**: Inicialización de la carpeta de Architecture Decision Records.
+- **G. Especificaciones (`_project_specs/`)**: Inicialización de la carpeta de spec-driven development.
+
+### Paso 3: Inyección Condicional (Ejecución)
+
+Una vez el humano responde con las letras que aprueba, procede **ÚNICAMENTE** con las opciones aprobadas:
+
+- **Si aprueban "A. Contexto IA"**: Abre el archivo `CLAUDE.md` (que generaste nativamente en el Paso 1). **INSERTA (append)** al principio del archivo la INTENCIÓN acordada con el usuario. Luego, **AÑADE AL FINAL del archivo** el bloque completo que encontrarás abajo en la sección *"Prompt instructions para CLAUDE.md"*. **NUNCA** sobrescribas los comandos de build/test/run nativos que generaste en el Paso 1.
+- **Si aprueban "D" o similar**: Instala las dependencias necesarias (Ruff, ESLint, etc.) e inyecta la configuración en los archivos pertinentes del proyecto.
+- **Ignora por completo** cualquier opción (B, C, E, F, G) que el humano no haya explícitamente aprobado para ser configurada AHORA MISMO.
 
 ---
 
