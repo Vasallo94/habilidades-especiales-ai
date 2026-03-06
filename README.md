@@ -1,8 +1,8 @@
-# vasallo94 Claude Skills
+# 🧠 Habilidades Especiales AI
 
-Una colección de skills y comandos personalizados para **Claude Code**.
+Una colección en constante evolución de skills, prompts y flujos de trabajo avanzados diseñados para potenciar asistentes de Inteligencia Artificial como **Claude Code**, **Cursor** y agentes autónomos.
 
-Estas skills están diseñadas siguiendo estándares de la industria (DevSecOps, Clean Code, Enterprise Architecture) para potenciar a Claude y estandarizar repositorios.
+Estas habilidades están construidas siguiendo las mejores prácticas de la industria (DevSecOps, Clean Code, Enterprise Architecture) para dotar a la IA de capacidades estándar, repetibles y de calidad profesional.
 
 ## Instalación rápida (One-Liner)
 
