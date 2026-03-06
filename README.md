@@ -23,8 +23,6 @@ Se descargarán automáticamente en tu carpeta global de Claude (`~/.claude/comm
 ### 🔄 Actualización
 Para mantener una skill actualizada con las últimas mejoras, simplemente **vuelve a ejecutar su comando de instalación**. El script descargará la versión más reciente de la rama `main` y sobrescribirá tu copia local.
 
-> *Más skills portadas desde el vault de Obsidian próximamente.*
-
 ## Estructura del repositorio
 
 - `/install.sh`: Script genérico de instalación.
