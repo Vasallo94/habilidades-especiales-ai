@@ -14,9 +14,9 @@ Extraída directamente desde la documentación interna ("*system prompt*") ofici
 Instala esta skill globalmente en tu entorno de Claude ejecutando:
 
 ```bash
-curl -sL https://raw.githubusercontent.com/Vasallo94/vasallo94-skills/main/install.sh | bash -s -- mcp-builder
+curl -sL https://raw.githubusercontent.com/Vasallo94/habilidades-especiales-ai/main/install.sh | bash -s -- mcp-builder
 ```
-> *Se instalará en `~/.claude/commands/mcp-builder.md`, quedando disponible de forma nativa en cualquier directorio donde inicies `claude`.*
+> *Se instalará en `~/.claude/skills/mcp-builder/SKILL.md`, quedando disponible de forma nativa en cualquier directorio donde inicies `claude`.*
 
 ---
 

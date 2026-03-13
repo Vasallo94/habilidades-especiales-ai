@@ -11,7 +11,7 @@ description: >
 
 # Delafu Mode — Enterprise Bootstrap
 
-Soy un Arquitecto de Software Principal y especialista en DevSecOps. Mi objetivo es elevar cualquier repositorio a estándares Enterprise Grade del sector asegurador, con foco en calidad, seguridad, mantenibilidad, auditoría y CI/CD readiness.
+Soy un Arquitecto de Software Principal y especialista en DevSecOps. Mi objetivo es elevar cualquier repositorio a estándares Enterprise Grade con foco en calidad, seguridad, mantenibilidad, auditoría y CI/CD readiness.
 
 ## Cuándo usar esta skill
 - Cuando un repositorio no tiene reglas claras para agentes de IA ni estándares técnicos corporativos.
@@ -89,15 +89,33 @@ El agente principal espera los 4 resultados, pero **SE DETIENE AQUÍ** y pasa al
 
 ### Paso 2: Interacción Humana (Propuesta y Menú)
 
-**ACCIÓN OBLIGATORIA:** No modifiques ni crees ningún archivo nuevo. Presenta al usuario tu deducción de la intención del proyecto y el menú de acciones de estandarización. **Obliga al humano a responder qué opciones (A-G) quiere instalar AHORA.** (Ver sección *"Interacción obligatoria con el usuario (fase de alineación)"* abajo).
+**ACCIÓN OBLIGATORIA:** No modifiques ni crees ningún archivo nuevo. Usa la herramienta `AskUserQuestion` de Claude Code para obtener la aprobación explícita del usuario antes de continuar.
 
-- **A. Contexto IA (`CLAUDE.md`)**: Configuración base de reglas, arquitectura y convenciones. (Solo si se aprueba, se modificará el archivo creado en el Paso 1).
-- **B. Ideas y roadmap (`FUTURE.md`)**: Creación del backlog vivo de ideas del humano.
-- **C. Trazabilidad (`CHANGELOG.md`)**: Inicialización del changelog en formato Keep a Changelog.
-- **D. Seguridad y calidad**: Instalación y configuración de linters y pre-commit hooks idiomáticos por stack.
-- **E. Estandarización Git**: Adopción obligatoria de **Conventional Commits**.
-- **F. Decisiones técnicas (`docs/adr/`)**: Inicialización de la carpeta de Architecture Decision Records.
-- **G. Especificaciones (`_project_specs/`)**: Inicialización de la carpeta de spec-driven development.
+#### Instrucciones de interacción
+
+Realiza **una única llamada** a `AskUserQuestion` con **3 preguntas**:
+
+**Pregunta 1 — Intención del proyecto** (single-select):
+Antes de esta pregunta, presenta por texto tu análisis del proyecto y del historial Git. Luego pregunta:
+- question: "He deducido que la intención del proyecto es: [TU_DEDUCCIÓN]. ¿Es correcta?"
+- options:
+  - "Sí, es correcta" — Proceder con la intención deducida
+  - "No, déjame explicar" — El usuario proporcionará su propia descripción via 'Other'
+
+**Pregunta 2 — Documentación** (multiSelect: true):
+- question: "¿Qué documentación quieres generar?"
+- options:
+  - "A. Contexto IA (CLAUDE.md)" — Configuración base de reglas, arquitectura y convenciones
+  - "B. Ideas y roadmap (FUTURE.md)" — Backlog vivo de ideas
+  - "C. Trazabilidad (CHANGELOG.md)" — Formato Keep a Changelog
+  - "G. Especificaciones (_project_specs/)" — Spec-Driven Development
+
+**Pregunta 3 — Controles técnicos** (multiSelect: true):
+- question: "¿Qué controles técnicos quieres configurar?"
+- options:
+  - "D. Seguridad y calidad" — Pre-commit hooks (gitleaks, linters, SAST)
+  - "E. Conventional Commits" — Estandarización obligatoria de commits
+  - "F. ADRs (docs/adr/)" — Architecture Decision Records
 
 ### Paso 3: Inyección Condicional (Ejecución)
 
@@ -301,17 +319,13 @@ El `CLAUDE.md` generado DEBE incluir una sección de instrucciones operativas pa
 - Formato Structured MADR con análisis de riesgos y opciones.
 - Numerar consecutivamente (0001, 0002...).
 
-### Documentación corporativa (lda-wiki-mcp)
-- Sugerir proactivamente documentar en la wiki corporativa usando el MCP `lda-wiki-mcp`.
-- Cuando se complete una feature significativa, un módulo nuevo, o un componente reutilizable, proponer al usuario: "¿Quieres que documente esto en la wiki corporativa?"
-- Priorizar documentación de: APIs públicas, decisiones arquitectónicas clave, guías de onboarding, y runbooks operativos.
 ```
 
 El contenido exacto debe adaptarse al stack y convenciones del proyecto, pero TODAS las secciones son obligatorias en el CLAUDE.md generado.
 
 ---
 
-## Estándares obligatorios del sector asegurador
+## Estándares de seguridad y cumplimiento
 
 Toda sugerencia debe cubrir explícitamente:
 - Prevención de inyección y validación estricta de entradas.
@@ -326,26 +340,18 @@ Toda sugerencia debe cubrir explícitamente:
 
 ## Interacción obligatoria con el usuario (fase de alineación)
 
-Antes de crear cualquier archivo, enviar este bloque con estructura exacta:
+Antes de crear cualquier archivo, usa la herramienta `AskUserQuestion` de Claude Code tal como se describe en el **Paso 2** del Protocolo Enterprise Bootstrap. Esta herramienta genera una interfaz nativa con opciones seleccionables, mucho más fiable que pedir respuestas por texto libre.
 
-1. **Deducción de la Intención:**
-   "He analizado el código y deduzco que la INTENCIÓN y propósito de este proyecto es: [Escribe aquí tu deducción]. ¿Es correcto? Por favor, matiza o define la intención real. Esto es vital para que yo y futuros agentes sepamos exactamente para qué estamos trabajando en este repositorio."
-
-2. **Feedback de Git:**
-   "He revisado el historial de commits y noto que [da tu evaluación breve]. Propongo estandarizarlo usando [Convención por estandarizar]. Si te parece bien, a partir de ahora me mostraré proactivo para redactar y gestionar los commits por ti siguiendo este estándar."
-
-3. **Decisión del Menú:**
-   "De las opciones (A, B, C, D, E, F, G) mencionadas arriba, ¿qué quieres que implemente y configure AHORA MISMO, y qué prefieres que deje documentado para el futuro?"
+**Importante:** La herramienta `AskUserQuestion` soporta entre 1 y 4 preguntas por llamada, con 2-4 opciones cada una. Usa `multiSelect: true` para las preguntas donde el usuario pueda elegir varias opciones (como el menú A-G).
 
 ---
 
 ## Reglas de ejecución
 - No generar soluciones genéricas: usar herramientas idiomáticas del stack detectado.
-- Esperar SIEMPRE respuesta a las 3 preguntas de alineación antes de crear archivos.
+- Esperar SIEMPRE la respuesta del usuario via `AskUserQuestion` antes de crear archivos.
 - Una vez validada la **INTENCIÓN**, colocarla como primer bloque crítico de `CLAUDE.md`.
-- Al crear `CLAUDE.md`, incluir SIEMPRE las prompt instructions de trazabilidad completas (CHANGELOG, FUTURE, ADR, Conventional Commits, quality gates, TDD, specs, lda-wiki-mcp).
+- Al crear `CLAUDE.md`, incluir SIEMPRE las prompt instructions de trazabilidad completas (CHANGELOG, FUTURE, ADR, Conventional Commits, quality gates, TDD, specs).
 - El `CLAUDE.md` debe usar progressive disclosure: raíz < 200 líneas, `@ruta` solo para piezas cortas y críticas.
-- Incluir instrucción de sugerir proactivamente documentación en wiki corporativa vía `lda-wiki-mcp`.
 - Mantener intervención mínima, trazable y reversible.
 - No romper compatibilidad salvo justificación explícita.
 
@@ -373,9 +379,3 @@ El bootstrap se considera completado cuando:
 4. El `CLAUDE.md` generado contiene las prompt instructions de trazabilidad completas.
 5. Pre-commit hooks instalados y funcionando.
 6. Al menos un ADR creado (ADR-0000: Bootstrap del proyecto).
-
-### REGLA DE ORO DE EDICIÓN
-Cuando uses `editar_nota`, el `nuevo_contenido` debe ser el **archivo completo**.
-- No duplicar frontmatter YAML.
-- Reemplazar metadata previa de forma limpia.
-- Preservar el contenido existente salvo cambios solicitados.

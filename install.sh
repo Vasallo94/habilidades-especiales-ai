@@ -1,50 +1,39 @@
 #!/bin/bash
-# install.sh - Instalador genérico para vasallo94 skills
-# Uso: curl -sL https://raw.githubusercontent.com/vasallo94/skills/main/install.sh | bash -s -- <skill_name>
+# install.sh - Instalador de skills para Claude Code
+# Uso: curl -sL https://raw.githubusercontent.com/Vasallo94/habilidades-especiales-ai/main/install.sh | bash -s -- <skill_name>
 
 set -e
 
-REPO="Vasallo94/vasallo94-skills"
+REPO="Vasallo94/habilidades-especiales-ai"
 BRANCH="main"
+DEST="$HOME/.claude/skills"
 
-# Detectar Sistema Operativo para la ruta correcta
-OS="$(uname -s)"
-case "${OS}" in
-    Linux*|Darwin*)
-        DEST="$HOME/.claude/commands"
-        ;;
-    CYGWIN*|MINGW*|MSYS*)
-        # En Git Bash / CMD de Windows
-        DEST="$HOME/.claude/commands"
-        ;;
-    *)
-        DEST="$HOME/.claude/commands"
-        ;;
-esac
-
-echo "🖥️  Sistema detectado: $OS"
 echo "📂 Directorio destino: $DEST"
 
 if [ $# -eq 0 ]; then
   echo "❌ Error: Debes especificar al menos una skill para instalar."
-  echo "Uso: curl -sL https://raw.githubusercontent.com/$REPO/$BRANCH/install.sh | bash -s -- <skill_name>"
+  echo ""
+  echo "Uso:"
+  echo "  curl -sL https://raw.githubusercontent.com/$REPO/$BRANCH/install.sh | bash -s -- <skill_name>"
+  echo ""
+  echo "Skills disponibles: delafu-mode, mcp-builder"
   exit 1
 fi
 
-mkdir -p "$DEST"
-
 for SKILL in "$@"; do
-  echo "📦 Instalando $SKILL..."
+  echo "📦 Instalando skill '$SKILL'..."
+  SKILL_DIR="$DEST/$SKILL"
+  mkdir -p "$SKILL_DIR"
   URL="https://raw.githubusercontent.com/$REPO/$BRANCH/skills/$SKILL/SKILL.md"
-  
-  # Usar curl para descargar el archivo, fallando si recibe 404
-  if curl -sLf "$URL" -o "$DEST/$SKILL.md"; then
-    echo "✅ Skill '$SKILL' instalada exitosamente en $DEST/$SKILL.md"
+
+  if curl -sLf "$URL" -o "$SKILL_DIR/SKILL.md"; then
+    echo "✅ '$SKILL' instalada en $SKILL_DIR/SKILL.md"
   else
     echo "❌ Error: No se pudo encontrar la skill '$SKILL'."
-    echo "Verifica que el nombre es correcto y que existe en el repositorio."
+    echo "   Verifica que el nombre es correcto y que existe en el repositorio."
+    rmdir "$SKILL_DIR" 2>/dev/null || true
   fi
 done
 
 echo ""
-echo "🎉 Instalación completada. Puedes verificar tus skills con 'claude agents'."
+echo "🎉 Instalación completada. Las skills están disponibles en todos tus proyectos de Claude Code."

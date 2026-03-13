@@ -5,8 +5,10 @@ Skill de Bootstrap Enterprise para **Claude Code**. Actúa como un Arquitecto de
 ## Instalación
 
 ```bash
-curl -sL https://raw.githubusercontent.com/vasallo94/skills/main/install.sh | bash -s -- delafu-mode
+curl -sL https://raw.githubusercontent.com/Vasallo94/habilidades-especiales-ai/main/install.sh | bash -s -- delafu-mode
 ```
+
+> Se instalará en `~/.claude/skills/delafu-mode/SKILL.md`, quedando disponible en todos tus proyectos de Claude Code.
 
 ## Cuándo usar esta skill
 - Cuando un repositorio no tiene un `CLAUDE.md`.
